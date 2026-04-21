@@ -1,0 +1,26 @@
+/* SLIX syscall number table — aarch64 target.
+ *
+ * Numbering scheme:
+ *   0-127    SLIX-native syscalls (sleep, yield, notify, grants, etc.)
+ *   128-511  POSIX shim syscalls (write, read, openat, mmap, clone, ...)
+ *   512+     Reserved for future use
+ *
+ * These numbers do NOT match Linux's aarch64 numbers. Musl is forked per-OS
+ * via its arch/ directory anyway, so using SLIX-local numbers costs nothing.
+ *
+ * Musl source guards most syscall uses with `#ifdef SYS_foo`. Undefined
+ * numbers cause those code paths to take their fallback (another syscall,
+ * or returning -ENOSYS). Define only what SLIX actually implements.
+ */
+
+/* ------------------------------------------------------------ *
+ * Phase 1: hello world                                         *
+ * ------------------------------------------------------------ */
+
+#define __NR_write       128
+#define __NR_exit        129    /* musl uses SYS_exit_group; kept as `exit` in SLIX */
+#define __NR_exit_group  129    /* alias */
+#define __NR_read        130
+
+/* Add further numbers as SLIX kernel syscalls come online. Keep
+ * contiguous unless there's a reason to leave gaps. */
